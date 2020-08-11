@@ -6,3 +6,8 @@ flight_schedule_columns = ['FlightDate', 'Reporting_Airline', 'DOT_ID_Reporting_
                            'Distance', 'CarrierDelay', 'WeatherDelay', 'NASDelay', 'SecurityDelay', 'LateAircraftDelay']
 
 
+airport_details_columns = ['AirportWac', 'AirportCountryCodeISO', 'AirportStateFips', 'CityMarketID', 'CityMarketName',
+                           'CityMarketWac', 'LatDegrees', 'LatHemisphere', 'LatMinutes', 'LatSeconds', 'LonDegrees',
+                           'LonHemisphere', 'LonMinutes', 'LonSeconds']
+
+airline_detail_columns = ['AirlineID', 'Carrier', 'CarrierName', 'UniqueCarrierName', 'Region', 'StartDate', 'EndDate']
