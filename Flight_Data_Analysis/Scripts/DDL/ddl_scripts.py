@@ -20,6 +20,7 @@ control_info_create_table = """
                             CREATE TABLE IF NOT EXISTS `CONTROL_INFO` (
                             `ID` int auto_increment PRIMARY KEY,
                             `FILE_NAME` varchar(100) NOT NULL,
+                            `BUCKET_NAME` varchar(100) NOT NULL,
                             `IS_PROCESSED` bool NOT NULL,
                             `CREATED_DATETIME` timestamp DEFAULT CURRENT_TIMESTAMP);
                             """

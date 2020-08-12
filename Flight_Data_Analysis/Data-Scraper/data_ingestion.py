@@ -34,11 +34,16 @@ def main():
         for file in files[key]:
             if key == "Downloads-Flight":
                 s3.upload_file(file, config.get('Bucket', 'bucket_name_flight'), s3_client)
+                sql_handler.insert(sql_cursor, "CONTROL_INFO", (file.split("\\")[-1],
+                                                                config.get('Bucket', 'bucket_name_flight'), False))
             if key == "Downloads-Airport":
                 s3.upload_file(file, config.get('Bucket', 'bucket_name_airport'), s3_client)
+                sql_handler.insert(sql_cursor, "CONTROL_INFO", (file.split("\\")[-1],
+                                                                config.get('Bucket', 'bucket_name_airport'), False))
             if key == "Downloads-Airline":
                 s3.upload_file(file, config.get('Bucket', 'bucket_name_airline'), s3_client)
-            sql_handler.insert(sql_cursor, "CONTROL_INFO", (file.split("\\")[-1], False))
+                sql_handler.insert(sql_cursor, "CONTROL_INFO", (file.split("\\")[-1],
+                                                                config.get('Bucket', 'bucket_name_airline'), False))
     sql_handler.close_connection(sql_cursor, sql_connection)
 
 
