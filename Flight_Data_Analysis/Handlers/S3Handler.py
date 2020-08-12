@@ -63,3 +63,21 @@ class S3Handler:
             print("Error creating a new bucket")
             raise ex
 
+    def upload_file(self, fileName: str, bucket: str, client, objectName: str = None):
+        """
+        Function to upload file in s3
+        :param client: s3 client object
+        :param fileName: file to upload
+        :param bucket: name of the bucket to which the file is to be uploaded
+        :param objectName: s3 object name. If None fileName is used instead
+        """
+        if objectName is None:
+            objectName = fileName
+        try:
+            print("Uploading file to bucket {}".format(bucket))
+            client.upload_file(fileName.split("\\")[-1], bucket, objectName)
+        except ClientError as er:
+            print("Error uploading file to s3")
+            raise er
+
+

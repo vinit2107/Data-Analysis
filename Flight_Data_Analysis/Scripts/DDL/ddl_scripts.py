@@ -11,3 +11,17 @@ airport_details_columns = ['AirportWac', 'AirportCountryCodeISO', 'AirportStateF
                            'LonHemisphere', 'LonMinutes', 'LonSeconds']
 
 airline_detail_columns = ['AirlineID', 'Carrier', 'CarrierName', 'UniqueCarrierName', 'Region', 'StartDate', 'EndDate']
+
+create_database_query = 'CREATE DATABASE IF NOT EXISTS `%s`;'
+
+use_database_query = 'USE `%s`;'
+
+control_info_create_table = """
+                            CREATE TABLE IF NOT EXISTS `CONTROL_INFO` (
+                            `ID` int auto_increment PRIMARY KEY,
+                            `FILE_NAME` varchar(100) NOT NULL,
+                            `IS_PROCESSED` bool NOT NULL,
+                            `CREATED_DATETIME` timestamp DEFAULT CURRENT_TIMESTAMP);
+                            """
+
+tables = {'CONTROL_INFO': control_info_create_table}

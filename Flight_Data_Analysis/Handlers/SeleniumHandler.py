@@ -1,24 +1,29 @@
+import os
+import time
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
 from configparser import RawConfigParser
 from Scripts.DDL.ddl_scripts import *
 from selenium.webdriver.common.keys import Keys
-import time
-import os
 
 
 class SeleniumHandler:
-    def get_browser_instance(self, config: RawConfigParser):
+    def download_files(self, config: RawConfigParser) -> dict:
         """
         Function to get the browser instance through which the dataset will be downloaded
+        :param config: object for configuration file
+        :return Dictionary with keys as folder name and values as the list of complete paths of the downloaded files
         """
         try:
-            self.download_flight_schedule_data(config)
+            files = {}
+            if config.get('Links', 'enable_flight_details').lower() == 'true':
+                files['Downloads-Flight'] = self.download_flight_schedule_data(config)
             if config.get('Links', 'enable_airport_details').lower() == 'true':
-                self.download_airport_data(config)
+                files['Downloads-Airport'] = self.download_airport_data(config)
             if config.get('Links', 'enable_airline_details').lower() == 'true':
-                self.download_airline_data(config)
+                files['Downloads-Airline'] = self.download_airline_data(config)
+            return files
         except Exception as ex:
             print("Error opening Chrome")
             raise ex
@@ -92,6 +97,7 @@ class SeleniumHandler:
                     time.sleep(40)
                     self.renamefiles(year + "_" + month, "Downloads-Flight")
             browser.close()
+            return self.list_files("Downloads-Flight")
         except Exception as ex:
             print("Error downloading files for flight schedule")
             raise ex
@@ -118,6 +124,7 @@ class SeleniumHandler:
             ActionChains(browser).click(element).perform()
             time.sleep(20)
             browser.close()
+            return self.list_files("Downloads-Airport")
         except Exception as ex:
             print("Error downloading data for aiport details")
             raise ex
@@ -146,20 +153,32 @@ class SeleniumHandler:
             ActionChains(browser).click(element).perform()
             time.sleep(10)
             browser.close()
+            return self.list_files("Downloads-Airline")
         except Exception as ex:
             print("Error downloading data for aiport details")
             raise ex
 
     def renamefiles(self, fileName: str, directory: str):
         """
-
-        :param directory:
-        :param fileName:
-        :return:
+        Function to rename the files downloaded using selenium
+        :param directory: directory where the files have to be renamed
+        :param fileName: new name of the file
         """
-        path = os.path.join(os.getcwd(), directory)
-        files = [os.path.join(path, file) for file in os.listdir(path)]
+        files = self.list_files(directory)
         latest_file = max(files, key=os.path.getctime)
         name = latest_file.split("\\")
         name[-1] = fileName + ".zip"
         os.rename(latest_file, "\\".join(name))
+
+    def list_files(self, directory: str):
+        """
+        Function to list files present in the given directory
+        :param directory: name of the directory
+        :return: list of files
+        """
+        try:
+            path = os.path.join(os.getcwd(), directory)
+            return [os.path.join(path, file) for file in os.listdir(path)]
+        except Exception as ex:
+            print("Error listing the files")
+            raise ex
