@@ -82,10 +82,23 @@ class MySQLHandler:
         """
         try:
             print("Closing connection with MySQL.")
-            cur.execute("Select * from CONTROL_INFO;")
-            print(cur.fetchone())
             cur.close()
             con.close()
         except Error as er:
             print("Error disconnecting with the server")
             raise er
+
+    def fetch_records(self, cur, tableName: str):
+        """
+        Function to fetch records from the given table name.
+        :param cur: cursor obtained for the table
+        :param tableName: name of the table for which the records need to be fetched
+        :return:
+        """
+        try:
+            cur.execute(fetch_map.get(tableName))
+            print("OK")
+            return cur.fetchall()
+        except Exception as ex:
+            print("Error fetching records from {}".format(tableName))
+            raise ex

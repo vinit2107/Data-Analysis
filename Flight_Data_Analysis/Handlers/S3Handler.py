@@ -1,3 +1,4 @@
+import os
 import boto3
 from botocore.exceptions import ConnectionError, ClientError
 
@@ -80,4 +81,19 @@ class S3Handler:
             print("Error uploading file to s3")
             raise er
 
-
+    def download_file(self, fileName: str, bucketName: str,  client):
+        """
+        Function to download files from S3 onto the local system
+        :param client: s3 client object
+        :param fileName: Name of the file to be downloaded
+        :param bucketName: name of the bucket from which the file has to be downloaded
+        """
+        try:
+            print("Downloading file {}".format(fileName))
+            print("Downloaded? ", end="")
+            dest_path = os.path.join("\\tmp", bucketName)
+            client.Bucket(bucketName).download_file(fileName, dest_path)
+            print("Success")
+        except Exception as ex:
+            print("Failed")
+            raise ex
