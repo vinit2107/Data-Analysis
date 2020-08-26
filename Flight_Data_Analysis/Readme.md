@@ -11,7 +11,7 @@ The aim of the project is to create a pipeline for completing data analysis of t
 details of the airports and details of airlines. Links to the dataset are given below. Scraped files will be stored on **AWS S3** which will act like a staging area for the dataset. 
 Next step would be to perform transformation to the data. This will be done using **PySpark**. The output of the transformation level will be stored in **AWS RedShift**. This will act like
 a warehouse which will facilitate analysis. The final stage will be to create a dashboard in **Tableau**. This project simulates batch processing. To maintain the files that have 
-been ingested and files that have been processed, a table 'CONTROL_INFO' will be maintained in **MySQL**.
+been ingested and files that have been processed, a table *'CONTROL_INFO'* will be maintained in **MySQL**.
 
 ## Links to Datasets
 
@@ -47,3 +47,18 @@ will be used to specify the years and months for which the data needs to be down
 
 ***mysql.hostname***, ***mysql.username***, ***mysql.password*** and ***mysql.database*** need to be provided for establishing a connection with MySQL server. It should be in
 same case as required for establishing connection.
+
+In order to run the stage 1 of the project, clone the repository, update the values mentioned above in the configuration.properties and run data_ingestion.py.
+
+## Stage - 2: Data Transformation
+
+This process involves transforming the data that was scraped to a more structured format in the database by creating a schema which facilitates analytics. Star schema will be
+used in the AWS Redshift. The dimension tables would be ***DIM_AIRLINE***, ***DIM_AIRPORT***, ***DIM_FLIGHT_SCHEDULE*** and the fact table is ***FLIGHT_INFO***. In order to do a transformation, PySpark will be used. Batches that were ingested can be identified from the *CONTROL_INFO* table. Since Spark does not allow updating records in the MySQL, a new record will be inserted in MySQL with the *IS_PROCESSED* flag set to True. The filter criterion would be to identify the latest entry in the *CONTROL_INFO* with *IS_PROCESSED* set to True, identify the datetime and find the records in *CONTROL_INFO* after that datetime. Respective dimensional and fact tables would be populated after the job. Following properties need to be configured:
+
+1. ***Redshift Configuration***
+
+***redshift.hostname***, ***redshift.username***, ***redshift.password*** and ***redshift.database***  needs to be configured in order to establish a successful connection.
+
+## Stage - 3: Dashboard in Tableau
+
+Work in progess. Link will be provided when the dashboard is published.
